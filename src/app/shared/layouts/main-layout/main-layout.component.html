@@ -1,0 +1,36 @@
+<nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" routerLink="/">
+      <h1 class="title is-5 has-text-white mb-0">Aplicación RRHH</h1> </a>
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu"> <div class="navbar-start">
+      <a class="navbar-item" routerLink="/persons" routerLinkActive="is-active">
+        Personal
+      </a>
+      <a class="navbar-item" routerLink="/dashboard" routerLinkActive="is-active">
+        Tablero
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-danger is-light" (click)="logout()">
+            Cerrar Sesión
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="section pt-6 mt-6"> <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</section>

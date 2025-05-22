@@ -1,0 +1,75 @@
+<section class="hero is-fullheight is-light">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="column is-4 is-offset-4">
+        <h3 class="title has-text-grey">Iniciar Sesión</h3>
+        <p class="subtitle has-text-grey">
+          Por favor, inicia sesión para continuar.
+        </p>
+        <div class="box">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="field">
+              <label class="label has-text-left">Correo Electrónico</label>
+              <div class="control">
+                <input
+                  class="input is-large"
+                  type="email"
+                  placeholder="Tu Correo Electrónico"
+                  autofocus=""
+                  formControlName="email"
+                />
+              </div>
+              @if (loginForm.get('email')?.invalid &&
+              loginForm.get('email')?.touched) {
+              <p class="help is-danger has-text-left">
+                @if (loginForm.get('email')?.errors?.['required']) { El correo
+                electrónico es obligatorio. } @if
+                (loginForm.get('email')?.errors?.['email']) { Introduce una
+                dirección de correo electrónico válida. }
+              </p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label has-text-left">Contraseña</label>
+              <div class="control">
+                <input
+                  class="input is-large"
+                  type="password"
+                  placeholder="Tu Contraseña"
+                  formControlName="password"
+                />
+              </div>
+              @if (loginForm.get('password')?.invalid &&
+              loginForm.get('password')?.touched) {
+              <p class="help is-danger has-text-left">
+                @if (loginForm.get('password')?.errors?.['required']) { La
+                contraseña es obligatoria. }
+              </p>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="button is-block is-info is-large is-fullwidth"
+              [disabled]="loginForm.invalid || isLoading"
+            >
+              @if (isLoading) { Cargando... } @else { Ingresar }
+            </button>
+            @if (errorMessage) {
+            <div class="notification is-danger is-light mt-4">
+              {{ errorMessage }}
+            </div>
+            }
+          </form>
+        </div>
+        <p class="has-text-grey">
+          ¿No tienes una cuenta?
+          <a routerLink="/auth/register" class="has-text-info"
+            >Regístrate aquí</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

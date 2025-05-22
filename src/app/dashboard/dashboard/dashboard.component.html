@@ -1,0 +1,259 @@
+<div class="container is-fluid py-5">
+  <h2 class="title is-2 has-text-centered mb-5">Tablero de Control</h2>
+
+  @if (errorMessage) {
+    <div class="notification is-danger is-light">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (loading) {
+    <progress class="progress is-small is-info" max="100">Cargando...</progress>
+    <p class="has-text-centered">Cargando datos del tablero...</p>
+  } @else {
+    <div class="columns is-multiline is-centered mb-5">
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Personal por Departamento</h3>
+          @if (departmentChartOptions && departmentChartOptions.series && departmentChartOptions.series.length > 0 && departmentChartOptions.series[0].data.length > 0) {
+            <apx-chart
+              [series]="departmentChartOptions.series!"
+              [chart]="departmentChartOptions.chart!"
+              [xaxis]="departmentChartOptions.xaxis!"
+              [title]="departmentChartOptions.title!"
+              [plotOptions]="departmentChartOptions.plotOptions!"
+              [dataLabels]="departmentChartOptions.dataLabels!"
+              [tooltip]="departmentChartOptions.tooltip!"
+              [grid]="departmentChartOptions.grid!"
+            ></apx-chart>
+          } @else {
+            <div class="notification is-info is-light has-text-centered">
+              No hay datos de departamento disponibles para mostrar.
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Distribución Salarial</h3>
+          <div id="chart-salaries">
+            @if (salaryChartOptions && salaryChartOptions.series && salaryChartOptions.series.length > 0 && salaryChartOptions.series[0].data.length > 0) {
+              <apx-chart
+                [series]="salaryChartOptions.series!"
+                [chart]="salaryChartOptions.chart!"
+                [xaxis]="salaryChartOptions.xaxis!"
+                [yaxis]="salaryChartOptions.yaxis!"
+                [title]="salaryChartOptions.title!"
+                [dataLabels]="salaryChartOptions.dataLabels!"
+                [tooltip]="salaryChartOptions.tooltip!"
+                [stroke]="salaryChartOptions.stroke!"
+                [grid]="salaryChartOptions.grid!"
+              ></apx-chart>
+            } @else {
+              <div class="notification is-info is-light has-text-centered">
+                No hay datos de salarios disponibles para mostrar.
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 class="title is-4 has-text-centered mb-4">Detalles de Personal Filtrado</h3>
+      <div class="level mb-4">
+        <div class="level-left">
+          <div class="level-item">
+            @if (currentFilter.department) {
+              <span class="tag is-info is-large">
+                Departamento: {{ currentFilter.department }}
+                <button class="delete is-small" (click)="clearPersonsFilter()"></button>
+              </span>
+            } @else if (currentFilter.minSalary || currentFilter.maxSalary) {
+              <span class="tag is-info is-large">
+                Salario: {{ currentFilter.minSalary ? ('$' + currentFilter.minSalary) : '' }}
+                @if (currentFilter.minSalary && currentFilter.maxSalary) { - }
+                {{ currentFilter.maxSalary ? ('$' + currentFilter.maxSalary) : '' }}
+                <button class="delete is-small" (click)="clearPersonsFilter()"></button>
+              </span>
+            } @else {
+              <span class="tag is-light is-large">
+                Mostrando todo el personal
+              </span>
+            }
+          </div>
+        </div>
+        <div class="level-right">
+          @if (currentFilter.department || currentFilter.minSalary || currentFilter.maxSalary) {
+            <button class="button is-light" (click)="clearPersonsFilter()">Limpiar Filtro</button>
+          }
+        </div>
+      </div>
+
+      @if (loadingPersons) {
+        <progress class="progress is-small is-info" max="100">Cargando...</progress>
+        <p class="has-text-centered">Cargando detalles del personal...</p>
+      } @else if (filteredPersons.length === 0) {
+        <div class="notification is-warning is-light has-text-centered">
+          No hay personal que coincida con el filtro actual.
+        </div>
+      } @else {
+        <div class="table-container">
+          <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo Electrónico</th>
+                <th>Departamento</th>
+                <th>Salario</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (person of filteredPersons; track person._id) {
+                <tr>
+                  <td>{{ person.firstName }}</td>
+                  <td>{{ person.lastName }}</td>
+                  <td>{{ person.email }}</td>
+                  <td>{{ person.department || 'N/A' }}</td>
+                  <td>{{ person.salary | currency:'USD':'symbol':'1.2-2' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+  </div>
+
+<!-- <div class="container is-fluid py-5">
+  <h2 class="title is-2 has-text-centered mb-5">Tablero de Control</h2>
+
+  @if (errorMessage) {
+    <div class="notification is-danger is-light">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (loading) {
+    <progress class="progress is-small is-info" max="100">Cargando...</progress>
+    <p class="has-text-centered">Cargando datos del tablero...</p>
+  } @else {
+    <div class="columns is-multiline is-centered mb-5">
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Personal por Departamento</h3>
+          @if (departmentChartOptions && departmentChartOptions.series && departmentChartOptions.series.length > 0 && departmentChartOptions.series[0].data.length > 0) {
+            <apx-chart
+              [series]="departmentChartOptions.series!"
+              [chart]="departmentChartOptions.chart!"
+              [xaxis]="departmentChartOptions.xaxis!"
+              [title]="departmentChartOptions.title!"
+              [plotOptions]="departmentChartOptions.plotOptions!"
+              [dataLabels]="departmentChartOptions.dataLabels!"
+              [tooltip]="departmentChartOptions.tooltip!"
+              [grid]="departmentChartOptions.grid!"
+            ></apx-chart>
+          } @else {
+            <div class="notification is-info is-light has-text-centered">
+              No hay datos de departamento disponibles para mostrar.
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Distribución Salarial</h3>
+        <div id="chart-salaries">
+          @if (salaryChartOptions && salaryChartOptions.series && salaryChartOptions.series.length > 0 && salaryChartOptions.series[0].data.length > 0) {
+            <apx-chart
+              [series]="salaryChartOptions.series!"
+              [chart]="salaryChartOptions.chart!"
+              [xaxis]="salaryChartOptions.xaxis!"
+              [yaxis]="salaryChartOptions.yaxis!"
+              [title]="salaryChartOptions.title!"
+              [dataLabels]="salaryChartOptions.dataLabels!"
+              [tooltip]="salaryChartOptions.tooltip!"
+              [stroke]="salaryChartOptions.stroke!"
+              [grid]="salaryChartOptions.grid!"
+            ></apx-chart>
+          } @else {
+            <div class="notification is-info is-light has-text-centered">
+              No hay datos de salarios disponibles para mostrar.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3 class="title is-4 has-text-centered mb-4">Detalles de Personal Filtrado</h3>
+    <div class="level mb-4">
+      <div class="level-left">
+        <div class="level-item">
+          @if (currentFilter.department) {
+            <span class="tag is-info is-large">
+              Departamento: {{ currentFilter.department }}
+              <button class="delete is-small" (click)="clearPersonsFilter()"></button>
+            </span>
+          } @else if (currentFilter.minSalary || currentFilter.maxSalary) {
+            <span class="tag is-info is-large">
+              Salario: {{ currentFilter.minSalary ? ('$' + currentFilter.minSalary) : '' }}
+              @if (currentFilter.minSalary && currentFilter.maxSalary) { - }
+              {{ currentFilter.maxSalary ? ('$' + currentFilter.maxSalary) : '' }}
+              <button class="delete is-small" (click)="clearPersonsFilter()"></button>
+            </span>
+          } @else {
+            <span class="tag is-light is-large">
+              Mostrando todo el personal
+            </span>
+          }
+        </div>
+      </div>
+      <div class="level-right">
+        @if (currentFilter.department || currentFilter.minSalary || currentFilter.maxSalary) {
+          <button class="button is-light" (click)="clearPersonsFilter()">Limpiar Filtro</button>
+        }
+      </div>
+    </div>
+
+    @if (loadingPersons) {
+      <progress class="progress is-small is-info" max="100">Cargando...</progress>
+      <p class="has-text-centered">Cargando detalles del personal...</p>
+    } @else if (filteredPersons.length === 0) {
+      <div class="notification is-warning is-light has-text-centered">
+        No hay personal que coincida con el filtro actual.
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo Electrónico</th>
+              <th>Departamento</th>
+              <th>Salario</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (person of filteredPersons; track person._id) {
+              <tr>
+                <td>{{ person.firstName }}</td>
+                <td>{{ person.lastName }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.department || 'N/A' }}</td>
+                <td>{{ person.salary | currency:'USD':'symbol':'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+  }
+</div> -->

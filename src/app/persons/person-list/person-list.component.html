@@ -1,0 +1,134 @@
+<div class="container is-fluid py-5">
+  <h2 class="title is-2 has-text-centered mb-5">Gestión de Personal</h2>
+
+  <div class="level mb-4">
+    <div class="level-left">
+      <div class="field is-grouped is-grouped-multiline">
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            [(ngModel)]="filterDepartment"
+            placeholder="Filtrar por Departamento"
+          />
+        </div>
+        <div class="control">
+          <input
+            class="input"
+            type="number"
+            [(ngModel)]="filterMinSalary"
+            placeholder="Salario Mín."
+          />
+        </div>
+        <div class="control">
+          <input
+            class="input"
+            type="number"
+            [(ngModel)]="filterMaxSalary"
+            placeholder="Salario Máx."
+          />
+        </div>
+        <div class="control">
+          <button class="button is-info" (click)="applyFilters()">
+            Aplicar Filtros
+          </button>
+        </div>
+        <div class="control">
+          <button class="button is-light" (click)="clearFilters()">
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="level-right">
+      <button routerLink="/persons/new" class="button is-primary">
+        <span class="icon is-small"><i class="fas fa-plus"></i></span>
+        <span>Añadir Nuevo Personal</span>
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+  <progress class="progress is-small is-info" max="100">Cargando...</progress>
+  <p class="has-text-centered">Cargando personal...</p>
+  } @else if (errorMessage) {
+  <div class="notification is-danger is-light">
+    {{ errorMessage }}
+  </div>
+  } @else if (persons.length === 0) {
+  <div class="notification is-info is-light">
+    No se encontró personal con los filtros aplicados.
+  </div>
+  } @else {
+  <div class="table-container mb-5">
+    <table
+      class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"
+    >
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo Electrónico</th>
+          <th>Cargo</th>
+          <th>Departamento</th>
+          <th>Fecha de Contratación</th>
+          <th>Salario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (person of persons; track person._id) {
+        <tr>
+          <td>{{ person.firstName }}</td>
+          <td>{{ person.lastName }}</td>
+          <td>{{ person.email }}</td>
+          <td>{{ person.position || "N/A" }}</td>
+          <td>{{ person.department || "N/A" }}</td>
+          <td>{{ person.hireDate | date : "shortDate" }}</td>
+          <td>{{ person.salary | currency : "USD" : "symbol" : "1.2-2" }}</td>
+          <td class="has-text-centered">
+            <div class="buttons is-centered are-small">
+              <a
+                [routerLink]="['/persons/edit', person._id]"
+                class="button is-warning is-light"
+                >Editar</a
+              >
+              <button
+                class="button is-danger is-light"
+                (click)="deletePerson(person._id)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <button
+      class="button pagination-previous"
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+    >
+      Anterior
+    </button>
+    <button
+      class="button pagination-next"
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)"
+    >
+      Siguiente
+    </button>
+    <ul class="pagination-list">
+      <li>
+        <span class="pagination-link is-current"
+          >Página {{ currentPage }} de {{ totalPages }}</span
+        >
+      </li>
+    </ul>
+  </nav>
+  }
+</div>

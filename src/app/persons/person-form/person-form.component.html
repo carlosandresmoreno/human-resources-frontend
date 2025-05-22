@@ -1,0 +1,101 @@
+<section class="section">
+  <div class="container">
+    <div class="column is-6 is-offset-3">
+      <div class="box">
+        <h2 class="title has-text-centered">
+          @if (isEditMode) { Editar Personal } @else { Añadir Nuevo Personal }
+        </h2>
+
+        @if (isLoading) {
+          <progress class="progress is-small is-info" max="100">Cargando datos...</progress>
+          <p class="has-text-centered">Por favor, espera...</p>
+        } @else {
+          <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
+            <div class="field">
+              <label class="label">Nombre:</label>
+              <div class="control">
+                <input class="input" type="text" formControlName="firstName" placeholder="Nombre">
+              </div>
+              @if (personForm.get('firstName')?.invalid && personForm.get('firstName')?.touched) {
+                <p class="help is-danger">El nombre es obligatorio.</p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label">Apellido:</label>
+              <div class="control">
+                <input class="input" type="text" formControlName="lastName" placeholder="Apellido">
+              </div>
+              @if (personForm.get('lastName')?.invalid && personForm.get('lastName')?.touched) {
+                <p class="help is-danger">El apellido es obligatorio.</p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label">Correo Electrónico:</label>
+              <div class="control">
+                <input class="input" type="email" formControlName="email" placeholder="correo@ejemplo.com">
+              </div>
+              @if (personForm.get('email')?.invalid && personForm.get('email')?.touched) {
+                <p class="help is-danger">
+                  @if (personForm.get('email')?.errors?.['required']) {
+                    El correo electrónico es obligatorio.
+                  }
+                  @if (personForm.get('email')?.errors?.['email']) {
+                    Introduce un correo electrónico válido.
+                  }
+                </p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label">Cargo:</label>
+              <div class="control">
+                <input class="input" type="text" formControlName="position" placeholder="Ej. Desarrollador">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Departamento:</label>
+              <div class="control">
+                <input class="input" type="text" formControlName="department" placeholder="Ej. Ingeniería">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Fecha de Contratación:</label>
+              <div class="control">
+                <input class="input" type="date" formControlName="hireDate">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Salario:</label>
+              <div class="control">
+                <input class="input" type="number" formControlName="salary" placeholder="Ej. 50000.00">
+              </div>
+              @if (personForm.get('salary')?.invalid && personForm.get('salary')?.touched) {
+                <p class="help is-danger">El salario debe ser un número válido y no negativo.</p>
+              }
+            </div>
+
+            <div class="field is-grouped is-grouped-right">
+              <div class="control">
+                <button type="submit" class="button is-info" [disabled]="personForm.invalid || isLoading">
+                  @if (isLoading) {
+                    Guardando...
+                  } @else {
+                    @if (isEditMode) { Actualizar Personal } @else { Crear Personal }
+                  }
+                </button>
+              </div>
+              <div class="control">
+                <a routerLink="/persons" class="button is-light">Cancelar</a>
+              </div>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,76 @@
+<section class="hero is-fullheight is-light">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="column is-4 is-offset-4">
+        <h3 class="title has-text-grey">Registrarse</h3>
+        <p class="subtitle has-text-grey">Crea una nueva cuenta.</p>
+        <div class="box">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="field">
+              <label class="label has-text-left">Nombre</label>
+              <div class="control">
+                <input class="input is-large" type="text" placeholder="Tu Nombre Completo" autofocus="" formControlName="name">
+              </div>
+              @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+                <p class="help is-danger has-text-left">
+                  @if (registerForm.get('name')?.errors?.['required']) {
+                    El nombre es obligatorio.
+                  }
+                </p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label has-text-left">Correo Electrónico</label>
+              <div class="control">
+                <input class="input is-large" type="email" placeholder="Tu Correo Electrónico" formControlName="email">
+              </div>
+              @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+                <p class="help is-danger has-text-left">
+                  @if (registerForm.get('email')?.errors?.['required']) {
+                    El correo electrónico es obligatorio.
+                  }
+                  @if (registerForm.get('email')?.errors?.['email']) {
+                    Introduce una dirección de correo electrónico válida.
+                  }
+                </p>
+              }
+            </div>
+
+            <div class="field">
+              <label class="label has-text-left">Contraseña</label>
+              <div class="control">
+                <input class="input is-large" type="password" placeholder="Tu Contraseña" formControlName="password">
+              </div>
+              @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                <p class="help is-danger has-text-left">
+                  @if (registerForm.get('password')?.errors?.['required']) {
+                    La contraseña es obligatoria.
+                  }
+                  @if (registerForm.get('password')?.errors?.['minLength']) {
+                    La contraseña debe tener al menos 6 caracteres.
+                  }
+                </p>
+              }
+            </div>
+
+            <button type="submit" class="button is-block is-success is-large is-fullwidth" [disabled]="registerForm.invalid">Registrarse</button>
+            @if (errorMessage) {
+              <div class="notification is-danger is-light mt-4">
+                {{ errorMessage }}
+              </div>
+            }
+            @if (successMessage) {
+              <div class="notification is-success is-light mt-4">
+                {{ successMessage }}
+              </div>
+            }
+          </form>
+        </div>
+        <p class="has-text-grey">
+          ¿Ya tienes una cuenta? <a routerLink="/auth/login" class="has-text-info">Inicia sesión aquí</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
